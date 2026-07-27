@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
 
     # Aplicación
-    "core",
+    "core.apps.CoreConfig",
 ]
 
 # ------------------------------------------------------------------------------
@@ -153,10 +153,6 @@ STATIC_URL = "static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_STORAGE = (
-    "whitenoise.storage.CompressedManifestStaticFilesStorage"
-)
-
 # ------------------------------------------------------------------------------
 # Archivos multimedia
 # ------------------------------------------------------------------------------
@@ -194,6 +190,29 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", cast=int, default=10)
 
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 CONTACT_EMAIL = config("CONTACT_EMAIL")
+
+# ------------------------------------------------------------------------------
+# Configuración del storage
+# ------------------------------------------------------------------------------
+
+SUPABASE_URL = config("SUPABASE_URL")
+
+SUPABASE_KEY = config("SUPABASE_KEY")
+
+SUPABASE_BUCKET = config(
+    "SUPABASE_BUCKET",
+    default="media"
+)
+
+# Storage
+STORAGES = {
+    "default": {
+        "BACKEND": "core.storage.SupabaseStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # ------------------------------------------------------------------------------
 # Configuración de seguridad (Producción)

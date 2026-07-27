@@ -6,8 +6,8 @@ class Biography(models.Model):
     profession = models.CharField(max_length=150, verbose_name="Profesión")
     short_description = models.CharField(max_length=150, verbose_name="Descripción Corta")
     about = models.TextField(verbose_name="Acerca de")
-    profile_picture = models.ImageField(upload_to='biography/', blank=True, null=True, verbose_name="Imagen de Perfil")
-    cv = models.FileField(upload_to='cv/', blank=True, null=True, verbose_name="CV")
+    profile_picture = models.ImageField(upload_to="biography/", verbose_name="Foto de perfil")
+    cv = models.FileField(upload_to="cv/", verbose_name="Hoja de vida")
     available_for_work = models.BooleanField(default=True, verbose_name="Disponible para Trabajo")
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Creado el")
@@ -37,7 +37,7 @@ class Technology(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="language", verbose_name="Categoría")
     name = models.CharField(max_length=100, unique=True, verbose_name="Nombre de la Tecnología")
     slug = models.SlugField(max_length=120, unique=True, verbose_name="Slug")
-    icon = models.ImageField(upload_to='technologies/', blank=True, null=True, verbose_name="Ícono")
+    icon = models.ImageField(upload_to="technologies/", blank=True, null=True, verbose_name="icono")
     level = models.PositiveSmallIntegerField(default=3, verbose_name="Nivel")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
     is_visible = models.BooleanField(default=True, verbose_name="¿Es Visible?")
@@ -67,7 +67,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=220, unique=True, verbose_name="Slug")
     short_description = models.CharField(max_length=200, verbose_name="Descripción Corta")
     description = models.TextField(verbose_name="Descripción")
-    thumbnail = models.ImageField(upload_to='projects/thumbnails/', blank=True, null=True, verbose_name="Miniatura")
+    thumbnail = models.ImageField(upload_to="projects/thumbnails/", blank=True, null=True, verbose_name="Miniatura")
     technologies = models.ManyToManyField(Technology, related_name='projects', verbose_name="Tecnologías")
     github_url = models.URLField(blank=True, null=True, verbose_name="Repositorio de Github")
     demo_url = models.URLField(blank=True, null=True, verbose_name="Demo")
@@ -91,7 +91,7 @@ class Project(models.Model):
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="project_images", verbose_name="Proyecto")
 
-    image = models.ImageField(upload_to='projects/gallery/', verbose_name="Imagen")
+    image = models.ImageField(upload_to="projects/gallery/", verbose_name="Imagen")
     alt_text = models.CharField(max_length=200, blank=True, null=True, verbose_name="Texto Alternativo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
 
@@ -111,7 +111,7 @@ class Experience(models.Model):
     position = models.CharField(max_length=150, verbose_name="Cargo")
     description = models.TextField(verbose_name="Descripción")
 
-    company_logo = models.ImageField(upload_to='experience/', blank=True, null=True, verbose_name="Logo de la Empresa")
+    company_logo = models.ImageField(upload_to="experience/", blank=True, null=True, verbose_name="Logo de la Empresa")
     location = models.CharField(max_length=150, blank=True, null=True, verbose_name="Ubicación")
 
     start_date = models.DateField(verbose_name="Fecha de Inicio")
@@ -164,7 +164,7 @@ class Education(models.Model):
     institution = models.CharField(max_length=150, verbose_name="Institución")
     degree = models.CharField(max_length=200, verbose_name="Título o programa")
     description = models.TextField(blank=True, verbose_name="Descripción")
-    institution_logo = models.ImageField(upload_to='education/', blank=True, null=True, verbose_name="Logo de la institución")
+    institution_logo = models.ImageField(upload_to="education/", verbose_name="Logo de la institución")
 
     start_date = models.DateField(verbose_name="Fecha de Inicio")
     end_date = models.DateField(blank=True, null=True, verbose_name="Fecha de Fin")
