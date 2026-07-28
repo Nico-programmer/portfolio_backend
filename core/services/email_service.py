@@ -1,7 +1,9 @@
 import logging
 
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
 from django.conf import settings
-from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -20,45 +22,62 @@ def send_contact_email(
         bool: True si el correo fue enviado correctamente, False en caso contrario.
     """
 
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key["api-key"] = settings.BREVO_API_KEY
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(configuration)
+    )
+
     email_subject = "📩 Nuevo mensaje desde tu Portafolio"
 
     email_body = f"""
-        Hola Nicolás.
+Hola Nicolás.
 
-        Has recibido un nuevo mensaje desde tu portafolio.
+Has recibido un nuevo mensaje desde tu portafolio.
 
-        ──────────────────────────────
+──────────────────────────────
 
-        Nombre:
-        {name}
+Nombre:
+{name}
 
-        Correo:
-        {email}
+Correo:
+{email}
 
-        Asunto:
-        {subject}
+Asunto:
+{subject}
 
-        ──────────────────────────────
+──────────────────────────────
 
-        Mensaje:
+Mensaje:
 
-        {message}
+{message}
 
-        ──────────────────────────────
+──────────────────────────────
 
-        Este correo fue enviado automáticamente desde tu portafolio.
-    """
+Este correo fue enviado automáticamente desde tu portafolio.
+"""
 
-    email_message = EmailMessage(
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        sender={
+            "name": "Portafolio",
+            "email": settings.DEFAULT_FROM_EMAIL,
+        },
+        to=[
+            {
+                "email": settings.CONTACT_EMAIL,
+            }
+        ],
+        reply_to={
+            "email": email,
+            "name": name,
+        },
         subject=email_subject,
-        body=email_body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_EMAIL],
-        reply_to=[email],
+        text_content=email_body,
     )
 
     try:
-        email_message.send(fail_silently=False)
+        api_instance.send_transac_email(send_smtp_email)
 
         logger.info(
             "Correo de contacto enviado correctamente desde %s.",
@@ -67,9 +86,17 @@ def send_contact_email(
 
         return True
 
-    except Exception:
+    except ApiException:
         logger.exception(
             "Error enviando correo de contacto desde %s.",
+            email,
+        )
+
+        return False
+
+    except Exception:
+        logger.exception(
+            "Error inesperado enviando correo de contacto desde %s.",
             email,
         )
 
