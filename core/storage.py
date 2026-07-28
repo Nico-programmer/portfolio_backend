@@ -15,9 +15,7 @@ class SupabaseStorage(Storage):
         self.service = get_storage_service()
 
     def _save(self, name, content):
-        """
-        Guarda un archivo en Supabase.
-        """
+        print(f"Guardando: {name}")
 
         extension = ""
 
@@ -42,11 +40,15 @@ class SupabaseStorage(Storage):
             or "application/octet-stream"
         )
 
-        self.service.upload_file(
+        print("Subiendo a:", path)
+
+        response = self.service.upload_file(
             path=path,
             content=data,
             content_type=content_type,
         )
+
+        print(response)
 
         return path
 

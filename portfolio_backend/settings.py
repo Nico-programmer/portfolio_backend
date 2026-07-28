@@ -18,7 +18,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = config(
+    "DEBUG",
+    default=False,
+    cast=bool
+)
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
@@ -159,7 +163,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = BASE_DIR / "media"
+# MEDIA_ROOT = BASE_DIR / "media"
 
 # ------------------------------------------------------------------------------
 # Django REST Framework
@@ -218,7 +222,12 @@ STORAGES = {
 # Configuración de seguridad (Producción)
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# Configuración de seguridad (Producción)
+# ------------------------------------------------------------------------------
+
 if not DEBUG:
+
     SECURE_BROWSER_XSS_FILTER = True
 
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -231,4 +240,7 @@ if not DEBUG:
 
     SECURE_SSL_REDIRECT = True
 
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https",
+    )
